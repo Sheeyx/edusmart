@@ -4,8 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class MemberService {
-    constructor(
-    ) {}
+    constructor(@InjectModel("Member") private readonly memberModel: Model<null>) {}
     
     public async signup() : Promise<string> {
         return "signup executed";

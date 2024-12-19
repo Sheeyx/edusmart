@@ -23,7 +23,7 @@ export class MemberController {
     return this.memberService.updateMember();
   }
 
-  @Get('update')
+  @Get('getMember')
   public async getMember(): Promise<string> {
     console.log("getMember");
     return this.memberService.getMember();
