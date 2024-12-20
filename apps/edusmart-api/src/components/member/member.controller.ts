@@ -8,8 +8,7 @@ export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
   @Post('signup')
-  @UsePipes(new ValidationPipe())
-  public async signup(@Body() input: MemberInput): Promise<Member> {
+   public async signup(@Body() input: MemberInput): Promise<Member> {
     try {
         console.log('Signup called');
         console.log('Input:', input);
@@ -21,7 +20,6 @@ export class MemberController {
   }
 
   @Post('login')
-  @UsePipes(new ValidationPipe())
   public async login(@Body() input: LoginInput): Promise<Member> {
     console.log("Signup");
     console.log('Input:', input);
