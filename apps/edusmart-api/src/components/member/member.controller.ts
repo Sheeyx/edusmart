@@ -1,6 +1,7 @@
-import { Controller, Post, Body, BadRequestException, Get, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException, Get, UsePipes, ValidationPipe, InternalServerErrorException } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { LoginInput, MemberInput } from '../../libs/dto/member/member.input';
+import { Member } from '../../libs/dto/member/member';
 
 @Controller('member')
 export class MemberController {
@@ -8,10 +9,15 @@ export class MemberController {
 
   @Post('signup')
   @UsePipes(new ValidationPipe())
-  public async signup(@Body() input: MemberInput): Promise<string> {
-    console.log('Signup called');
-    console.log('Input:', input);
-    return this.memberService.signup();
+  public async signup(@Body() input: MemberInput): Promise<Member> {
+    try {
+        console.log('Signup called');
+        console.log('Input:', input);
+        return this.memberService.signup(input);
+    } catch (err) {
+        console.log("Error occured, sign up", err);
+        throw new InternalServerErrorException();
+    }
   }
 
   @Post('login')
