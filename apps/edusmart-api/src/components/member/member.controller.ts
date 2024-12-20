@@ -22,10 +22,10 @@ export class MemberController {
 
   @Post('login')
   @UsePipes(new ValidationPipe())
-  public async login(@Body() input: LoginInput): Promise<string> {
+  public async login(@Body() input: LoginInput): Promise<Member> {
     console.log("Signup");
     console.log('Input:', input);
-    return this.memberService.login();
+    return this.memberService.login(input);
   }
 
   @Post('update')
