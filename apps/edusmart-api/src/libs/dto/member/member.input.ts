@@ -1,4 +1,4 @@
-import { IsAlphanumeric, IsNotEmpty, IsOptional, Length, Matches } from 'class-validator';
+import { IsNotEmpty, IsOptional, Length, Matches } from 'class-validator';
 import { MemberAuthType, MemberType } from '../../enums/member.enum';
 const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 

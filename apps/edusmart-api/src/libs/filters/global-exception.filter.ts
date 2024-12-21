@@ -17,23 +17,19 @@ import {
       let message: any = 'Internal server error'; // Default message
   
       if (exception instanceof HttpException) {
+        // NestJS HttpException xatolarini boshqarish
         status = exception.getStatus();
         const errorResponse = exception.getResponse();
   
         if (typeof errorResponse === 'object' && errorResponse !== null) {
-          // Agar obyekt bo'lsa, xabarni tekshirish
           const responseMessage = (errorResponse as any).message;
-  
-          if (Array.isArray(responseMessage)) {
-            message = responseMessage; // Validatsiya xatosi massiv bo'lsa
-          } else if (typeof responseMessage === 'string') {
-            message = responseMessage; // Oddiy string bo'lsa
-          } else {
-            message = errorResponse; // To‘liq javob obyektini qaytarish
-          }
+          message = Array.isArray(responseMessage) ? responseMessage : [responseMessage];
         } else {
-          message = errorResponse; // Oddiy string bo'lsa
+          message = [errorResponse]; // Oddiy stringni massivga aylantirish
         }
+      } else if (exception instanceof Error) {
+        // TypeError yoki boshqa JavaScript xatolari
+        message = [exception.message];
       }
   
       // Xatoni formatlash
@@ -41,10 +37,13 @@ import {
         statusCode: status,
         timestamp: new Date().toISOString(),
         path: request.url,
-        message: Array.isArray(message) ? message : [message], // Har doim massiv qilib qaytarish
+        message, // Har doim massiv qaytariladi
       };
   
-      console.error('GLOBAL ERROR:', errorResponse);
+      console.error('GLOBAL ERROR:', {
+        error: exception,
+        formattedError: errorResponse,
+      });
   
       // Javobni qaytarish
       response.status(status).json(errorResponse);

@@ -20,5 +20,6 @@ export class Member {
     memberArticles?: string;
     deletedAt: Date;
     createdAt: Date;
+    accessToken?: string;
     
 }

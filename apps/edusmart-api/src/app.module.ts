@@ -4,9 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from "@nestjs/config"
 import { ComponentsModule } from './components/components.module';
 import { DatabaseModule } from './database/database.module';
-import { APP_FILTER } from '@nestjs/core';
-import { GlobalExceptionFilter } from './libs/filters/global-exception.filter';
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
