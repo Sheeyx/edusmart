@@ -28,8 +28,6 @@ export class MemberService {
         .findOne({memberNick})
         .select('+memberPassword')
         .exec();
-
-        console.log(response.memberPassword, "memberPaswword");
         
 
         if(!response || response.memberStatus === MemberStatus.DELETE) {

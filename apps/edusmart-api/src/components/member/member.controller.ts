@@ -1,4 +1,4 @@
-import { Controller, Post, Body, BadRequestException, Get, UsePipes, ValidationPipe, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { LoginInput, MemberInput } from '../../libs/dto/member/member.input';
 import { Member } from '../../libs/dto/member/member';
@@ -9,32 +9,25 @@ export class MemberController {
 
   @Post('signup')
    public async signup(@Body() input: MemberInput): Promise<Member> {
-    try {
-        console.log('Signup called');
-        console.log('Input:', input);
-        return this.memberService.signup(input);
-    } catch (err) {
-        console.log("Error occured, sign up", err);
-        throw new InternalServerErrorException();
-    }
+   console.log('POST: memberSignup:');
+   return await this.memberService.signup(input);
   }
 
   @Post('login')
   public async login(@Body() input: LoginInput): Promise<Member> {
-    console.log("Signup");
-    console.log('Input:', input);
+    console.log(" POST: memberLogin");
     return this.memberService.login(input);
   }
 
   @Post('update')
   public async updateMember(): Promise<string> {
-    console.log("updateMember");
+    console.log("POST: updateMember");
     return this.memberService.updateMember();
   }
 
   @Get('getMember')
   public async getMember(): Promise<string> {
-    console.log("getMember");
+    console.log("GET: getMember");
     return this.memberService.getMember();  
   }
 }
