@@ -7,6 +7,9 @@ import { AuthMember } from '../auth/decorators/auth.member.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { MemberType } from '../../libs/enums/member.enum';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { MemberUpdate } from '../../libs/dto/member/member.update';
+import { ObjectId } from 'mongoose';
+import { shapeIntoMongoObjectId } from '../../libs/config';
 
 @Controller('member')
 export class MemberController {
@@ -24,16 +27,21 @@ export class MemberController {
     return this.memberService.login(input);
   }
 	@UseGuards(AuthGuard)
-  @Post('update')
-  public async updateMember(): Promise<string> {
-    console.log("POST: updateMember");
-    return this.memberService.updateMember();
+  @Post('updateMember')
+  public async updateMember(
+    @Body() input: MemberUpdate, 
+    @AuthMember('_id') memberId: ObjectId, 
+  ): Promise<Member> {
+    console.log('POST: updateMember');
+    delete input._id;
+
+    return this.memberService.updateMember(memberId, input);
   }
 
 	@UseGuards(AuthGuard)
   @Get('checkAuth')
 	public async checkAuth(@AuthMember('memberNick') memberNick: string): Promise<string> {
-		console.log('Query: checkAuth');
+		console.log('GET: checkAuth');
 		console.log('memberNick', memberNick);
 
 		return `Hi ${memberNick}`;
@@ -42,29 +50,30 @@ export class MemberController {
 	@UseGuards(RolesGuard)
 	@Get('checkAuthRoles')
 	public async checkAuthRoles(@AuthMember() authMember: Member): Promise<string> {
-		console.log('Query: checkAuthRoles');
+		console.log('GET: checkAuthRoles');
 		return `Hi ${authMember.memberNick} you are ${authMember.memberType} (memberId) ${authMember._id}`;
 	}
 
   @Get('getMember')
-  public async getMember(): Promise<string> {
-    console.log("GET: getMember");
-    return this.memberService.getMember();  
-  }
+  public async getMember(@Body() input: string): Promise<Member> {
+		console.log('Query: getMember');
+		const targetId = shapeIntoMongoObjectId(input);
+		return this.memberService.getMember(targetId);
+	}
 
   /**ADMIN **/
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Post('getAllMembersAdmin')
 	public async getAllMembersByAdmin(): Promise<string> {
-		console.log('Mutation: getAllMembersByAdmin');
+		console.log('POST: getAllMembersByAdmin');
 		return this.memberService.getAllMembersByAdmin();
 	}
 	//Authorization : ADMIN
 	@Roles(MemberType.ADMIN)
 	@Post('getAllMembersAdmin')
 	public async updateMemberByAdmin(): Promise<string> {
-		console.log('Mutation: updateMemberByAdmin');
+		console.log('POST: updateMemberByAdmin');
 		return this.memberService.updateMemberByAdmin();
 	}
 }
