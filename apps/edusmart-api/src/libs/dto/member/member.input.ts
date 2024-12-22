@@ -1,5 +1,7 @@
-import { IsNotEmpty, IsOptional, Length, Matches } from 'class-validator';
-import { MemberAuthType, MemberType } from '../../enums/member.enum';
+import { IsIn, IsNotEmpty, IsOptional, Length, Matches, Min } from 'class-validator';
+import { MemberAuthType, MemberCategory, MemberStatus, MemberType } from '../../enums/member.enum';
+import { availableAgentSorts, availableMemberSorts } from '../../config';
+import { Direction } from '../../enums/common.enum';
 const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
 export class MemberInput {
@@ -21,6 +23,31 @@ export class MemberInput {
 
 	@IsOptional()
 	memberAuthType?: MemberAuthType;
+  
+	@IsOptional()
+  memberCategory?:MemberCategory;
+
+  @IsOptional()
+  memberFullName?: string;
+
+  @IsOptional()
+  memberImage?: string;
+
+  @IsOptional()
+  memberAddress?: string;
+
+  @IsOptional()
+  memberDesc?: string;
+
+  @IsOptional()
+  memberExperience?: string;
+
+  @IsOptional()
+  memberLocation?: string;
+
+  @IsOptional()
+  memberLinks?: string;
+
 }
 
 export class LoginInput {
@@ -31,4 +58,63 @@ export class LoginInput {
 	@IsNotEmpty()
 	@Length(5, 12)
 	memberPassword: string;
+}
+
+
+class AISearch {
+	@IsOptional()
+	text?: string
+}
+export class AgentsInquiry {
+	@IsNotEmpty()
+	@Min(1)
+	page: number;
+
+	@IsNotEmpty()
+	@Min(1)
+	limit: number;
+
+	@IsOptional()
+	@IsIn([availableAgentSorts])
+	sort?: string;
+
+	@IsOptional()
+	direction?: Direction
+
+	@IsNotEmpty()
+	search: AISearch
+
+
+	
+}
+
+
+class MISearch {
+	@IsOptional()
+	memberStatus?: MemberStatus;
+
+	@IsOptional()
+	memberType?: MemberType;
+
+	@IsOptional()
+	text?: string;
+}
+export class MembersInquiry {
+	@IsNotEmpty()
+	@Min(1)
+	page: number;
+
+	@IsNotEmpty()
+	@Min(1)
+	limit: number;
+
+	@IsOptional()
+	@IsIn([availableMemberSorts])
+	sort?: string;
+
+	@IsOptional()
+	direction?: Direction;
+
+	@IsNotEmpty()
+	search: MISearch;
 }
