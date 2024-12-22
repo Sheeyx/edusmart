@@ -23,3 +23,12 @@ export class Member {
     accessToken?: string;
     
 }
+
+export class TotalCounter {
+	total:number
+}
+
+export class Members {
+	list: Member[];
+	metaCounter:TotalCounter[]
+}
