@@ -1,5 +1,5 @@
 import { IsIn, IsNotEmpty, IsOptional, Length, Matches, Min } from 'class-validator';
-import { MemberAuthType, MemberStatus, MemberType } from '../../enums/member.enum';
+import { MemberAuthType, MemberCategory, MemberStatus, MemberType } from '../../enums/member.enum';
 import { availableAgentSorts, availableMemberSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
 const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
@@ -23,6 +23,9 @@ export class MemberInput {
 
 	@IsOptional()
 	memberAuthType?: MemberAuthType;
+  
+	@IsOptional()
+  memberCategory?:MemberCategory;
 
   @IsOptional()
   memberFullName?: string;

@@ -6,6 +6,7 @@ import {
 	Matches,
 } from 'class-validator';
 import { ObjectId } from 'mongoose';
+import { MemberCategory } from '../../enums/member.enum';
 
 const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
@@ -31,6 +32,10 @@ export class MemberUpdate {
 	@IsOptional()
 	@IsString()
 	memberFullName?: string;
+
+    @IsOptional()
+	@IsString()
+	memberCategory?: MemberCategory;
 
 	@IsOptional()
 	@IsString()
