@@ -1,6 +1,6 @@
 import { IsIn, IsNotEmpty, IsOptional, Length, Matches, Min } from 'class-validator';
-import { MemberAuthType, MemberType } from '../../enums/member.enum';
-import { availableAgentSorts } from '../../config';
+import { MemberAuthType, MemberStatus, MemberType } from '../../enums/member.enum';
+import { availableAgentSorts, availableMemberSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
 const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
@@ -59,7 +59,7 @@ export class LoginInput {
 
 
 class AISearch {
-	@IsNotEmpty()
+	@IsOptional()
 	text?: string
 }
 export class AgentsInquiry {
@@ -83,4 +83,35 @@ export class AgentsInquiry {
 
 
 	
+}
+
+
+class MISearch {
+	@IsOptional()
+	memberStatus?: MemberStatus;
+
+	@IsOptional()
+	memberType?: MemberType;
+
+	@IsOptional()
+	text?: string;
+}
+export class MembersInquiry {
+	@IsNotEmpty()
+	@Min(1)
+	page: number;
+
+	@IsNotEmpty()
+	@Min(1)
+	limit: number;
+
+	@IsOptional()
+	@IsIn([availableMemberSorts])
+	sort?: string;
+
+	@IsOptional()
+	direction?: Direction;
+
+	@IsNotEmpty()
+	search: MISearch;
 }
