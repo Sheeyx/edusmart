@@ -35,8 +35,8 @@ import {
   
 	  // Foydalanuvchi ma'lumotlarini `request`ga qo'shish
 	  console.log('memberNick[auth] =>', authMember.memberNick);
-	  request.body.authMember = authMember;
-  
+	  request.user = authMember;
+
 	  return true;
 	}
   }
