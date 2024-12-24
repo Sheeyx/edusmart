@@ -5,9 +5,6 @@ export const AuthMember = createParamDecorator((data: string, context: Execution
 
 
         request = context.switchToHttp().getRequest();
-        console.log('HTTP request:', request);
-    
-
     if (!request) {
         console.error('Request object is not found');
         return null;
@@ -18,8 +15,6 @@ export const AuthMember = createParamDecorator((data: string, context: Execution
 
     // `authMember` obyektini olish
     const member = request.user;
-
-    console.log('AuthMember data:', member);
 
     // Agar `authMember` mavjud bo'lsa, unga `authorization`ni qo'shing
     if (member && authorization) {

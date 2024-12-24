@@ -50,7 +50,7 @@ import {
 	  console.log('memberNick[roles] =>', authMember.memberNick);
   
 	  // Foydalanuvchini `request`ga qo'shish
-	  request.body.authMember = authMember;
+	  request.user = authMember;
   
 	  return true; // Guard muvaffaqiyatli o'tdi
 	}

@@ -23,17 +23,17 @@ export class WithoutGuard implements CanActivate {
         const authMember = await this.authService.verifyToken(token);
 
         // Foydalanuvchi ma'lumotlarini `request.body`ga qo'shish
-        request.body.authMember = authMember;
+        request.user = authMember;
       } catch (err) {
         // Token xato bo'lsa, foydalanuvchini `null` qilib qo'yish
-        request.body.authMember = null;
+        request.user = null;
       }
     } else {
       // Token bo'lmasa, foydalanuvchini `null` qilib qo'yish
-      request.body.authMember = null;
+      request.user= null;
     }
 
-    console.log('memberNick[without] =>', request.body.authMember?.memberNick ?? 'none');
+    console.log('memberNick[without] =>', request.user?.memberNick ?? 'none');
     return true; // Har doim kirishga ruxsat beradi
   }
 }

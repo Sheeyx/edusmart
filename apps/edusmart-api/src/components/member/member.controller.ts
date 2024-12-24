@@ -71,10 +71,10 @@ export class MemberController {
 	}
 	@UseGuards(WithoutGuard)
 	@Get('getMember')
-	public async getMember(@Body() input: string): Promise<Member> {
+	public async getMember(@Body() input: string, @AuthMember('_id') memberId: ObjectId): Promise<Member> {
 		console.log('GET: getMember');
 		const targetId = shapeIntoMongoObjectId(input);
-		return await this.memberService.getMember(targetId);
+		return await this.memberService.getMember(memberId, targetId);
 	}
 	@UseGuards(WithoutGuard)
 	@Get('getTeachers')
