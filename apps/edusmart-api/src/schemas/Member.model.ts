@@ -75,10 +75,12 @@ const MemberSchema = new Schema({
 
     memberLessons: {
         type: Number,
+        default: 0,
     },
 
     memberArticles: {
         type: Number,
+        default: 0,
     },
 
     deletedAt: {
