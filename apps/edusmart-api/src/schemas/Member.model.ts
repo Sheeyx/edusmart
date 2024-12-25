@@ -74,11 +74,13 @@ const MemberSchema = new Schema({
     },
 
     memberLessons: {
-        type: String,
+        type: Number,
+        default: 0,
     },
 
     memberArticles: {
-        type: String,
+        type: Number,
+        default: 0,
     },
 
     deletedAt: {

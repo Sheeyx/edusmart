@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { AgentsInquiry, LoginInput, MemberInput, MembersInquiry } from '../../libs/dto/member/member.input';
 import { Member, Members } from '../../libs/dto/member/member';
@@ -71,10 +71,10 @@ export class MemberController {
 	}
 	@UseGuards(WithoutGuard)
 	@Get('getMember')
-	public async getMember(@Body() input: string): Promise<Member> {
+	public async getMember(@Query() input: string, @AuthMember('_id') memberId: ObjectId): Promise<Member> {
 		console.log('GET: getMember');
 		const targetId = shapeIntoMongoObjectId(input);
-		return await this.memberService.getMember(targetId);
+		return await this.memberService.getMember(memberId, targetId);
 	}
 	@UseGuards(WithoutGuard)
 	@Get('getTeachers')

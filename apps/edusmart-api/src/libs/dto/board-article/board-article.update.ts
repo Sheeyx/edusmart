@@ -1,5 +1,5 @@
 
-import { IsNotEmpty, IsOptional, Length } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, Length } from 'class-validator';
 import { BoardArticleStatus } from '../../enums/board-article.enum';
 import { ObjectId } from 'mongoose';
 
@@ -9,6 +9,7 @@ export class BoardArticleUpdate {
 	_id: ObjectId;
 
 	@IsOptional()
+	@IsEnum(BoardArticleStatus)
 	articleStatus?: BoardArticleStatus;
 
 	@IsOptional()
