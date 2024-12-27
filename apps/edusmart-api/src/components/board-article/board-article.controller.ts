@@ -53,7 +53,7 @@ export class BoardArticleController {
 	@UseGuards(WithoutGuard)
     @Get('getBoardArticles')
 	public async getBoardArticles(
-		@Body('input') input: BoardArticlesInquiry,
+		@Query() input: BoardArticlesInquiry,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<BoardArticles> {
 		console.log('GET: getBoardArticles');
@@ -77,7 +77,7 @@ export class BoardArticleController {
 	@UseGuards(RolesGuard)
 @Get('getAllBoardArticlesAdmin')
 	public async getAllBoardArticlesByAdmin(
-		@Body('input') input: AllBoardArticlesInquiry,
+		@Query() input: AllBoardArticlesInquiry,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<BoardArticles> {
 		console.log('GET: getAllBoardArticlesByAdmin');

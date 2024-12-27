@@ -78,7 +78,7 @@ export class MemberController {
 	}
 	@UseGuards(WithoutGuard)
 	@Get('getTeachers')
-	public async getAgents(@Body('input') input: AgentsInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Members> {
+	public async getAgents(@Query() input: AgentsInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Members> {
 		console.log('GET: getTeachers');
 		return await this.memberService.getAgents(memberId, input);
 	}
@@ -87,7 +87,7 @@ export class MemberController {
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Get('getAllMembersAdmin')
-	public async getAllMembersByAdmin(@Body('input') input: MembersInquiry): Promise<Members> {
+	public async getAllMembersByAdmin(@Query() input: MembersInquiry): Promise<Members> {
 		console.log('POST: getAllMembersByAdmin');
 		return await this.memberService.getAllMembersByAdmin(input);
 	}

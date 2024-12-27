@@ -77,7 +77,7 @@ export class BoardArticleService {
 	}
 
 	public async getBoardArticles(memberId: ObjectId, input: BoardArticlesInquiry): Promise<BoardArticles> {
-		const { articleCategory, text } = input.search;
+		const { articleCategory, text } = input.search || {};
 		const match: T = { articleStatus: BoardArticleStatus.ACTIVE };
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
@@ -127,7 +127,7 @@ export class BoardArticleService {
 	}
 
     public async getAllBoardArticlesByAdmin(input: AllBoardArticlesInquiry): Promise<BoardArticles> {
-		const { articleStatus, articleCategory } = input.search;
+		const { articleStatus, articleCategory } = input.search || {};
 		const match: T = {};
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 

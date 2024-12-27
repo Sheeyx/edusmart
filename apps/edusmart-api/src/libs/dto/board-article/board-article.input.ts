@@ -3,6 +3,7 @@ import { ObjectId } from 'mongoose';
 import { BoardArticleCategory, BoardArticleStatus } from '../../enums/board-article.enum';
 import { Direction } from '../../enums/common.enum';
 import { availableBoardArticleSorts } from '../../config';
+import { Type } from 'class-transformer';
 
 export class BoardArticleInput {
 	@IsNotEmpty()
@@ -35,10 +36,12 @@ class BAISearch {
 
 export class BoardArticlesInquiry {
 	@IsNotEmpty()
+	@Type(() => Number)	
 	@Min(1)
 	page: number;
 
 	@IsNotEmpty()
+	@Type(() => Number)	
 	@Min(1)
 	
 	limit: number;
@@ -50,7 +53,7 @@ export class BoardArticlesInquiry {
 	@IsOptional()
 	direction?: Direction;
 
-	@IsNotEmpty()
+	@IsOptional()
 	search: BAISearch;
 }
 
@@ -65,10 +68,12 @@ class ABAISearch {
 
 export class AllBoardArticlesInquiry {
 	@IsNotEmpty()
+	@Type(() => Number)	
 	@Min(1)
 	page: number;
 
 	@IsNotEmpty()
+	@Type(() => Number)	
 	@Min(1)
 	limit: number;
 
@@ -79,6 +84,6 @@ export class AllBoardArticlesInquiry {
 	@IsOptional()
 	direction?: Direction;
 
-	@IsNotEmpty()
+	@IsOptional()
 	search: ABAISearch;
 }
