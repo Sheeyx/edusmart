@@ -93,7 +93,7 @@ export class MemberService {
 	}
 
 	public async getAgents(memberId: ObjectId, input: AgentsInquiry): Promise<Members> {
-		const { text } = input.search;
+		const { text } = input.search || {};
 		const match: T = { memberType: MemberType.TEACHER, memberStatus: MemberStatus.ACTIVE };
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
@@ -117,7 +117,7 @@ export class MemberService {
 	}
 
     public async getAllMembersByAdmin(input: MembersInquiry): Promise<Members> {
-		const { text, memberStatus, memberType } = input.search;
+		const { text, memberStatus, memberType } = input.search || {};
 		const match: T = {};
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 		if (memberStatus) match.memberStatus = memberStatus;

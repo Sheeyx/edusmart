@@ -2,6 +2,7 @@ import { IsIn, IsNotEmpty, IsOptional, Length, Matches, Min } from 'class-valida
 import { MemberAuthType, MemberCategory, MemberStatus, MemberType } from '../../enums/member.enum';
 import { availableAgentSorts, availableMemberSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
+import { Type } from 'class-transformer';
 const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
 export class MemberInput {
@@ -67,11 +68,13 @@ class AISearch {
 }
 export class AgentsInquiry {
 	@IsNotEmpty()
+	@Type(() => Number)	
 	@Min(1)
 	page: number;
 
 	@IsNotEmpty()
 	@Min(1)
+	@Type(() => Number)	
 	limit: number;
 
 	@IsOptional()
@@ -81,7 +84,7 @@ export class AgentsInquiry {
 	@IsOptional()
 	direction?: Direction
 
-	@IsNotEmpty()
+	@IsOptional() 
 	search: AISearch
 
 
@@ -101,10 +104,12 @@ class MISearch {
 }
 export class MembersInquiry {
 	@IsNotEmpty()
+	@Type(() => Number)	
 	@Min(1)
 	page: number;
 
 	@IsNotEmpty()
+	@Type(() => Number)	
 	@Min(1)
 	limit: number;
 
@@ -115,6 +120,6 @@ export class MembersInquiry {
 	@IsOptional()
 	direction?: Direction;
 
-	@IsNotEmpty()
+	@IsOptional() 
 	search: MISearch;
 }
