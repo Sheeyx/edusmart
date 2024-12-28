@@ -3,7 +3,7 @@ import { Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Member, Members } from '../../libs/dto/member/member';
 import { AgentsInquiry, LoginInput, MemberInput, MembersInquiry } from '../../libs/dto/member/member.input';
-import { MemberStatus, MemberType } from '../../libs/enums/member.enum';
+import { MemberAuthType, MemberStatus, MemberType } from '../../libs/enums/member.enum';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { AuthService } from '../auth/auth.service';
 import { MemberUpdate } from '../../libs/dto/member/member.update';
@@ -15,6 +15,17 @@ export class MemberService {
 		@InjectModel('Member') private readonly memberModel: Model<Member>,
 		private readonly authService: AuthService,
 	) {}
+	public async googleSignupOrLogin(input: MemberInput): Promise<Member> {
+		try {
+			// AuthService orqali Google login yoki signupni boshqarish
+			const member = await this.authService.googleLogin(input);
+			return member;
+		} catch (error) {
+			console.error('Google signup/login error:', error);
+			throw new InternalServerErrorException('Google login error.');
+		}
+	}
+	
 	public async signup(input: MemberInput): Promise<Member> {
 		// TODO: Hash password
 		input.memberPassword = await this.authService.hashPassword(input.memberPassword);

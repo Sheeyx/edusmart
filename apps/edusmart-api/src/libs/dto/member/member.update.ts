@@ -4,6 +4,7 @@ import {
 	IsNotEmpty,
 	Length,
 	Matches,
+	IsEmail,
 } from 'class-validator';
 import { ObjectId } from 'mongoose';
 import { MemberCategory } from '../../enums/member.enum';
@@ -32,6 +33,10 @@ export class MemberUpdate {
 	@IsOptional()
 	@IsString()
 	memberFullName?: string;
+
+	@IsOptional()
+	@IsEmail()
+	memberEmail?:string
 
     @IsOptional()
 	@IsString()

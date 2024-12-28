@@ -29,19 +29,28 @@ const MemberSchema = new Schema({
     memberPhone: {
         type: String,
         index: {unique: true, sparse: true},
-        required: true,
+        required: function () {
+            return this.memberAuthType !== 'EMAIL';
+          }
     },
 
     memberNick: {
         type: String,
         index: {unique: true, sparse: true},
-        required: true,
+        required: function () {
+            return this.memberAuthType !== 'EMAIL';
+          }
     },
 
     memberPassword: {
         type: String,
         select: false,
-        required: true,
+        required: function () {
+            return this.memberAuthType !== 'EMAIL';
+        }
+    },
+    memberEmail: {
+        type: String,
     },
 
     memberFullName: {
