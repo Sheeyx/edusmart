@@ -11,6 +11,7 @@ export class Member {
 	memberNick: string;
 	memberPassword?: string;
 	memberFullName?: string;
+	memberEmail:string;
 	memberImage: string;
 	memberAddress?: string;
 	memberDesc?: string;

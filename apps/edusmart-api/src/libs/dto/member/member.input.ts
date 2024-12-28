@@ -1,4 +1,4 @@
-import { IsIn, IsNotEmpty, IsOptional, Length, Matches, Min } from 'class-validator';
+import { IsEmail, IsIn, IsNotEmpty, IsOptional, Length, Matches, Min, ValidateIf } from 'class-validator';
 import { MemberAuthType, MemberCategory, MemberStatus, MemberType } from '../../enums/member.enum';
 import { availableAgentSorts, availableMemberSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
@@ -6,17 +6,20 @@ import { Type } from 'class-transformer';
 const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
 export class MemberInput {
+	@ValidateIf((obj) => obj.memberAuthType !== 'EMAIL') 
 	@IsNotEmpty()
   @Length(3, 12)
 	memberNick: string;
 
 	@IsNotEmpty()
+	@ValidateIf((obj) => obj.memberAuthType !== 'EMAIL') 
 	@Matches(passwordRegEx, {
 		message: `Password must be 8-20 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.`,
 	})
 	memberPassword: string;
 
 	@IsNotEmpty()
+	@ValidateIf((obj) => obj.memberAuthType !== 'EMAIL') 
 	memberPhone: string;
 
 	@IsOptional()
@@ -30,6 +33,10 @@ export class MemberInput {
 
   @IsOptional()
   memberFullName?: string;
+
+  @IsOptional()
+  	@IsEmail()
+  memberEmail?:string
 
   @IsOptional()
   memberImage?: string;
@@ -78,7 +85,7 @@ export class AgentsInquiry {
 	limit: number;
 
 	@IsOptional()
-	@IsIn([availableAgentSorts])
+	@IsIn(availableAgentSorts)
 	sort?: string;
 
 	@IsOptional()
@@ -114,7 +121,7 @@ export class MembersInquiry {
 	limit: number;
 
 	@IsOptional()
-	@IsIn([availableMemberSorts])
+	@IsIn(availableMemberSorts)
 	sort?: string;
 
 	@IsOptional()
