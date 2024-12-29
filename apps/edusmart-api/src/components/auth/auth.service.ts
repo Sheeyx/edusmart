@@ -42,7 +42,7 @@ export class AuthService {
 	}
 
 	public async googleLogin(user: MemberInput): Promise<Member> {
-		const { memberEmail, memberFullName, memberImage } = user;
+		const { memberEmail, memberFullName, memberImage, memberType } = user;
 
 		// Foydalanuvchini email orqali tekshirish
 		let existingMember = await this.memberModel.findOne({ memberEmail }).exec();
@@ -55,6 +55,7 @@ export class AuthService {
 				memberImage,
 				memberAuthType: MemberAuthType.EMAIL,
 				memberStatus: MemberStatus.ACTIVE,
+				memberType
 			});
 		}
 

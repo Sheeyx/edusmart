@@ -1,4 +1,4 @@
-import { IsEmail, IsIn, IsNotEmpty, IsOptional, Length, Matches, Min, ValidateIf } from 'class-validator';
+import { IsEmail, IsEnum, IsIn, IsNotEmpty, IsOptional, Length, Matches, Min, ValidateIf } from 'class-validator';
 import { MemberAuthType, MemberCategory, MemberStatus, MemberType } from '../../enums/member.enum';
 import { availableAgentSorts, availableMemberSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
@@ -89,7 +89,8 @@ export class AgentsInquiry {
 	sort?: string;
 
 	@IsOptional()
-	direction?: Direction
+    @IsEnum(Direction) // `Direction` enum tipi uchun validatsiya
+    direction?: Direction;
 
 	@IsOptional() 
 	search: AISearch
