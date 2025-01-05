@@ -58,6 +58,7 @@ export class BoardArticleService {
 		targetBoardArticle.memberData = await this.memberService.getMember(null, targetBoardArticle.memberId);
 		return targetBoardArticle;
 	}
+
     public async updateBoardArticle(memberId: ObjectId, input: BoardArticleUpdate): Promise<BoardArticle> {
 		const { _id, articleStatus} = input;
 		const result = await this.boardArticleModel
@@ -186,4 +187,5 @@ export class BoardArticleService {
 			.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true })
 			.exec();
 	}
+
 }
