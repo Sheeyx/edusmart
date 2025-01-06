@@ -70,6 +70,8 @@ export class MemberService {
 
 	public async updateMember(memberId: ObjectId, input: MemberUpdate): Promise<Member> {
 		console.log('input:', input);
+		console.log('Received member ID in service:', memberId);
+		console.log('Input data for update:', input);
 		const result: Member = await this.memberModel
 			.findOneAndUpdate(
 				{

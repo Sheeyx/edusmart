@@ -14,7 +14,6 @@ import { WithoutGuard } from '../auth/guards/without.guard';
 import { getMulterUploader } from '../../libs/utils/uploader';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-
 @Controller('member')
 export class MemberController {
 	constructor(private readonly memberService: MemberService) {}
@@ -28,30 +27,30 @@ export class MemberController {
 	@Post('login')
 	public async login(@Body() input: LoginInput): Promise<Member> {
 		console.log(' POST: memberLogin');
-		return  await this.memberService.login(input);
+		return await this.memberService.login(input);
 	}
 
-	@UseGuards(AuthGuard)
 	@Post('updateMember')
+	@UseGuards(AuthGuard)
 	@UseInterceptors(FileInterceptor('memberImage', getMulterUploader('member')))
-	public async updateMember( @AuthMember('_id') memberId: ObjectId,
-	  @Body() input: MemberUpdate,
-	  @UploadedFile() file: Express.Multer.File,
-	 
+	public async updateMember(
+		@AuthMember('_id') memberId: ObjectId,
+		@Body() input: MemberUpdate,
+		@UploadedFile() file: Express.Multer.File,
 	): Promise<Member> {
-		if(memberId !=input._id) {
-			throw new Error ('Member ID is not true');
-		}
-		delete input._id
+		console.log('Authenticated member ID:', memberId); // This is the member ID attached to request.user by AuthGuard
+		console.log('Input data:', input);
+		
+		delete input._id;
 		if (!memberId) {
 			throw new Error('Member ID is required!');
-		  }
-	  const uploadPath = `./uploads/member/`; // Path ni dinamik tarzda kiritish
-	  if (file) {
-		input.memberImage = `${uploadPath}/${file.filename}`;
-	  }
-//   console.log(`req:${input}`)
-	  return await this.memberService.updateMember(memberId, input);
+		}
+		const uploadPath = `./uploads/member`; // Path ni dinamik tarzda kiritish
+		if (file) {
+			input.memberImage = `${uploadPath}/${file.filename}`;
+		}
+		//   console.log(`req:${input}`)
+		return await this.memberService.updateMember(memberId, input);
 	}
 
 	@UseGuards(AuthGuard)
@@ -94,7 +93,7 @@ export class MemberController {
 	//Authorization : ADMIN
 	@Roles(MemberType.ADMIN)
 	@Post('updateMembersAdmin')
-  public async updateMemberByAdmin(@Body('input') input: MemberUpdate): Promise<Member> {
+	public async updateMemberByAdmin(@Body('input') input: MemberUpdate): Promise<Member> {
 		console.log('POST: updateMemberByAdmin');
 		return await this.memberService.updateMemberByAdmin(input);
 	}

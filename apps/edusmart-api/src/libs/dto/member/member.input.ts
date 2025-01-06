@@ -8,7 +8,7 @@ const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$
 export class MemberInput {
 	@ValidateIf((obj) => obj.memberAuthType !== 'EMAIL') 
 	@IsNotEmpty()
-  @Length(3, 12)
+    @Length(3, 12)
 	memberNick: string;
 
 	@IsNotEmpty()
@@ -29,7 +29,7 @@ export class MemberInput {
 	memberAuthType?: MemberAuthType;
   
 	@IsOptional()
-  memberCategory?:MemberCategory;
+     memberCategory?:MemberCategory;
 
   @IsOptional()
   memberFullName?: string;
@@ -90,6 +90,7 @@ export class AgentsInquiry {
 
 	@IsOptional()
     @IsEnum(Direction) // `Direction` enum tipi uchun validatsiya
+	@Type(() => Number)
     direction?: Direction;
 
 	@IsOptional() 

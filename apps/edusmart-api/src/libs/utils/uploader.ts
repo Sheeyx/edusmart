@@ -2,6 +2,7 @@ import { diskStorage, Options } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import { Logger } from '@nestjs/common';
+import * as fs from 'fs';
 
 // Logger ni yaratish
 const logger = new Logger('MulterUploader');
@@ -11,6 +12,10 @@ export function getMulterUploader(address: string): Options {
     storage: diskStorage({
       destination: function (req, file, cb) {
         const uploadPath = `./uploads/${address}`;
+        // Check if the directory exists; if not, create it
+        if (!fs.existsSync(uploadPath)) {
+          fs.mkdirSync(uploadPath, { recursive: true });
+        }
         logger.log(`Uploading file to path: ${uploadPath}`); // Log yozish
         cb(null, uploadPath); // Fayllarni saqlash manzili
       },

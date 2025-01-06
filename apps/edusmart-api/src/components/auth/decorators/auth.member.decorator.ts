@@ -2,8 +2,6 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const AuthMember = createParamDecorator((data: string, context: ExecutionContext) => {
     let request: any;
-
-
         request = context.switchToHttp().getRequest();
     if (!request) {
         console.error('Request object is not found');
