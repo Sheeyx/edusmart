@@ -1,0 +1,12 @@
+export enum LessonCategory {
+	BEGINNER = 'BEGINNER',
+	ELEMENTRY = 'ELEMENTRY',
+	INTERMEDIATE = 'INTERMEDIATE',
+	ADVANCED = 'ADVANCED',
+}
+
+export enum LessonStatus {
+	ACTIVE = 'ACTIVE',
+	DELETE = 'DELETE',
+    PENDING = 'PENDING',
+}
