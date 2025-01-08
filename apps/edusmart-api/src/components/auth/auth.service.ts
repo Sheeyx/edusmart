@@ -4,10 +4,17 @@ import * as bcrypt from 'bcryptjs';
 import { T } from '../../libs/types/common';
 import { Member } from '../../libs/dto/member/member';
 import { shapeIntoMongoObjectId } from '../../libs/config';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { MemberAuthType, MemberStatus } from '../../libs/enums/member.enum';
+import { MemberInput } from '../../libs/dto/member/member.input';
 
 @Injectable()
 export class AuthService {
-	constructor(private jwtService: JwtService) {}
+	constructor(
+		@InjectModel('Member') private readonly memberModel: Model<Member>,
+		private jwtService: JwtService,
+	) {}
 
 	public async hashPassword(memberPassword: string): Promise<string> {
 		const salt = await bcrypt.genSalt();
@@ -32,5 +39,30 @@ export class AuthService {
 		const member = await this.jwtService.verifyAsync(token);
 		member._id = shapeIntoMongoObjectId(member._id);
 		return member;
+	}
+
+	public async googleLogin(user: MemberInput): Promise<Member> {
+		const { memberEmail, memberFullName, memberImage, memberType } = user;
+
+		// Foydalanuvchini email orqali tekshirish
+		let existingMember = await this.memberModel.findOne({ memberEmail }).exec();
+
+		if (!existingMember) {
+			// Yangi foydalanuvchini yaratish
+			existingMember = await this.memberModel.create({
+				memberEmail,
+				memberFullName,
+				memberImage,
+				memberAuthType: MemberAuthType.EMAIL,
+				memberStatus: MemberStatus.ACTIVE,
+				memberType
+			});
+		}
+
+		// JWT token yaratish
+		const memberWithToken = existingMember.toObject();
+		memberWithToken.accessToken = await this.createToken(memberWithToken);
+
+		return memberWithToken;
 	}
 }
