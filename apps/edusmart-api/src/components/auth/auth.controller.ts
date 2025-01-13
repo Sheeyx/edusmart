@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { Member } from '../../libs/dto/member/member';
@@ -17,16 +17,27 @@ export class AuthController {
   }
 
   @Get('google/callback')
-@UseGuards(AuthGuard('google'))
-async googleAuthRedirect(@Req() req): Promise<Member> {
-  console.log('req', req);
-  console.log('user', req.user);
-
-  const user: MemberInput = {
-    ...req.user,
-    memberType: req.query.memberType, // Foydalanuvchi tomonidan yuborilgan memberType
-  };
-
-  return await this.authService.googleLogin(user);
-}
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req, @Res() res): Promise<void> {
+    try {
+      console.log('req', req);
+      console.log('user', req.user);
+  
+      const user: MemberInput = {
+        ...req.user,
+        memberType: req.query.memberType, // Foydalanuvchi tomonidan yuborilgan memberType
+      };
+  
+     
+      const member = await this.authService.googleLogin(user);
+  
+      // Token yoki boshqa foydalanuvchi ma'lumotlarini frontendga yuborish
+      const redirectUrl = `http://localhost:5173/home?accessToken=${member.accessToken}`;
+      return res.redirect(redirectUrl);
+    } catch (error) {
+      console.error('Google login error:', error);
+      return res.redirect(`http://localhost:5173/error`);
+    }
+  }
+  
 }
