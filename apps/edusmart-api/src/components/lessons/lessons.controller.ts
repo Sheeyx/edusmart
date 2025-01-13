@@ -17,7 +17,7 @@ export class LessonsController {
     
     @UseGuards(AuthGuard)
 	@Post('create')
-	public async createBoardArticle(
+	public async createBoardArticle( 
 		@Body('input') input: LessonsInput,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Lessons> {

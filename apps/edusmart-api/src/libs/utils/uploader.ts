@@ -1,7 +1,7 @@
 import { diskStorage, Options } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
-import { Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common'; 
 import * as fs from 'fs';
 
 // Logger ni yaratish
@@ -29,17 +29,17 @@ export function getMulterUploader(address: string): Options {
         cb(null, uniqueName); // Fayl nomi uchun noyob nom
       },
     }),
-    limits: { fileSize: 500 * 1024 * 1024 }, // Maksimal fayl hajmi: 500MB
+    limits: { fileSize: 1024 * 1024 * 1024 }, // Maksimal fayl hajmi: 1GB
     fileFilter: (req, file, cb) => {
-        const allowedExtensions = /\.(jpg|jpeg|png|gif|)$/;
+        const allowedExtensions = /\.(jpg|jpeg|png|gif|mp4|avi|mkv)$/;
         const extname = allowedExtensions.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = file.mimetype.match(/\/(jpg|jpeg|png|gif|pdf|txt)$/);
+        const mimetype = file.mimetype.match(/\/(jpg|jpeg|png|gif|pdf|txt|mp4|avi|mkv)$/);
       
         if (extname && (mimetype || file.mimetype === 'application/octet-stream')) {
           return cb(null, true); // Fayl qabul qilindi
         } else {
             cb(null, false);
-          return cb(new Error('Only image or PDF files are allowed!'));
+          return cb(new Error('Image, PDF and Video files are allowed!'));
         }
       }
   };

@@ -1,7 +1,21 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+	BadRequestException,
+	Body,
+	Controller,
+	Get,
+	Post,
+	Query,
+	UploadedFile,
+	UseGuards,
+	UseInterceptors,
+} from '@nestjs/common';
 import { BoardArticleService } from './board-article.service';
 import { AuthGuard } from '../auth/guards/auth.guard';
-import { AllBoardArticlesInquiry, BoardArticleInput, BoardArticlesInquiry } from '../../libs/dto/board-article/board-article.input';
+import {
+	AllBoardArticlesInquiry, 
+	BoardArticleInput,
+	BoardArticlesInquiry,
+} from '../../libs/dto/board-article/board-article.input';
 import { AuthMember } from '../auth/decorators/auth.member.decorator';
 import { ObjectId } from 'mongoose';
 import { BoardArticle, BoardArticles } from '../../libs/dto/board-article/board-article';
@@ -11,47 +25,68 @@ import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.u
 import { Roles } from '../auth/decorators/roles.decorator';
 import { MemberType } from '../../libs/enums/member.enum';
 import { RolesGuard } from '../auth/guards/roles.guard';
-
+import { FileInterceptor } from '@nestjs/platform-express';
+import { getMulterUploader } from '../../libs/utils/uploader';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 
 @Controller('article')
 export class BoardArticleController {
-    constructor(private readonly boardArticleService: BoardArticleService) {}
-	
-    @UseGuards(AuthGuard)
+	constructor(private readonly boardArticleService: BoardArticleService) {}
+
+	@UseGuards(AuthGuard)
 	@Post('createBoardArticle')
+	@UseInterceptors(FileInterceptor('articleImage', getMulterUploader('article')))
 	public async createBoardArticle(
-		@Body('input') input: BoardArticleInput,
 		@AuthMember('_id') memberId: ObjectId,
+		@Body() body: any,
+		@UploadedFile() file: Express.Multer.File,
 	): Promise<BoardArticle> {
-		console.log('POST: createBoardArticle');
-		return await this.boardArticleService.createBoardArticle(memberId, input);
+		if (!memberId) {
+			throw new Error('Member ID is required!');
+		}
+		const { articleTitle, articleContent, articleCategory } = body;
+		if (!articleTitle || !articleContent || !articleCategory) {
+		  throw new BadRequestException('Missing required fields');
+		}
+		const uploadPath = `./uploads/article`; // Path ni dinamik tarzda kiritish
+		if (file) {
+			body.articleImage = `${uploadPath}/${file.filename}`;
+		}
+
+		const parsedInput = {
+			articleTitle,
+			articleContent,
+			articleCategory,
+			articleImage: body.articleImage,
+		  };
+
+        console.log('Parsed input:', parsedInput);	
+		return await this.boardArticleService.createBoardArticle(memberId, parsedInput);
 	}
 
 	@UseGuards(WithoutGuard)
-    @Get('getBoardArticle')
-	public async getBoardArticle(
-		@Query() input: string,
-		@AuthMember('_id') memberId: ObjectId,
-	): Promise<BoardArticle> {
+	@Get('getBoardArticle')
+	public async getBoardArticle(@Query() input: string, @AuthMember('_id') memberId: ObjectId): Promise<BoardArticle> {
 		console.log('GET: getBoardArticle');
 		const articleId = shapeIntoMongoObjectId(input);
 		return await this.boardArticleService.getBoardArticle(memberId, articleId);
 	}
 
 	@UseGuards(AuthGuard)
-    @Post("updateBoardArticle")
+	@Post('updateBoardArticle')
 	public async updateBoardArticle(
 		@Body('input') input: BoardArticleUpdate,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<BoardArticle> {
-        console.log('memberId', memberId)
+		console.log('memberId', memberId);
 		console.log('POST: updateBoardArticle');
 		input._id = shapeIntoMongoObjectId(input._id);
 		return await this.boardArticleService.updateBoardArticle(memberId, input);
 	}
 
 	@UseGuards(WithoutGuard)
-    @Get('getBoardArticles')
+	@Get('getBoardArticles')
 	public async getBoardArticles(
 		@Query() input: BoardArticlesInquiry,
 		@AuthMember('_id') memberId: ObjectId,
@@ -61,7 +96,7 @@ export class BoardArticleController {
 	}
 
 	@UseGuards(AuthGuard)
-@Post('likeTargetBoardArticle')
+	@Post('likeTargetBoardArticle')
 	public async likeTargetBoardArticle(
 		@Body('articleId') input: string,
 		@AuthMember('_id') memberId: ObjectId,
@@ -75,7 +110,7 @@ export class BoardArticleController {
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
-@Get('getAllBoardArticlesAdmin')
+	@Get('getAllBoardArticlesAdmin')
 	public async getAllBoardArticlesByAdmin(
 		@Query() input: AllBoardArticlesInquiry,
 		@AuthMember('_id') memberId: ObjectId,
@@ -86,7 +121,7 @@ export class BoardArticleController {
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
-    @Post('updateBoardArticleAdmin')
+	@Post('updateBoardArticleAdmin')
 	public async updateBoardArticleByAdmin(
 		@Body('input') input: BoardArticleUpdate,
 		@AuthMember('_id') memberId: ObjectId,
@@ -98,8 +133,11 @@ export class BoardArticleController {
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
-    @Post('removeBoardArticleAdmin')
-	public async removeBoardArticleByAdmin(@Body('articleId') input: string,@AuthMember('_id') memberId: ObjectId,): Promise<BoardArticle> {
+	@Post('removeBoardArticleAdmin')
+	public async removeBoardArticleByAdmin(
+		@Body('articleId') input: string,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<BoardArticle> {
 		console.log('POST: removeBoardArticleByAdmin');
 		const articleId = shapeIntoMongoObjectId(input);
 		return await this.boardArticleService.removeBoardArticleByAdmin(articleId);

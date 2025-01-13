@@ -20,6 +20,7 @@ export class BoardArticleInput {
 	@IsOptional()
 	articleImage?: string;
 
+	@IsOptional()
 	memberId?: ObjectId;
 }
 
