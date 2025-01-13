@@ -79,7 +79,7 @@ const MemberSchema = new Schema({
     },
 
     memberLinks: {
-        type: String,
+        type: [String],
     },
 
     memberLessons: {
