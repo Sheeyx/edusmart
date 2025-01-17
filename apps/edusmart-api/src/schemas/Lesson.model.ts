@@ -40,6 +40,10 @@ export const LessonsSchema = new Schema(
 			default: 0,
         },
 
+		lessonVideo: {
+			type: String
+		},
+
         memberId: {
 			type: Schema.Types.ObjectId,
 			required: true,

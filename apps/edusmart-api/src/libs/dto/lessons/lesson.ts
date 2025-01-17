@@ -15,6 +15,7 @@ export class Lessons {
 	memberId: ObjectId;
 	createdAt: Date;
 	updatedAt: Date;
+	lessonVideo: string;
 
 	/** from aggregation **/
 	
