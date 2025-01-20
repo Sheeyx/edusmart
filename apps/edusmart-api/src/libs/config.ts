@@ -2,7 +2,7 @@ import { ObjectId } from 'bson';
 import { T } from './types/common';
 export const availableAgentSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberExperience'];
 export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberExperience'];
-export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberExperience'];
+export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'memberLikes'];
 export const availableCommentSorts = ['createdAt', 'updatedAt'];
 
 export const shapeIntoMongoObjectId = (target: any) => {

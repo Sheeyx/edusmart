@@ -106,7 +106,7 @@ export class MemberService {
 		const match: T = { memberType: MemberType.TEACHER, memberStatus: MemberStatus.ACTIVE };
 
 		// `Direction` enumdan foydalanish va fallback qiymat
-		const sortDirection: Direction =
+		const sortDirection: Direction = 
 			input.direction === Direction.ASC || input.direction === Direction.DESC ? input.direction : Direction.DESC;
 
 		const sort: T = { [input?.sort ?? 'createdAt']: sortDirection };

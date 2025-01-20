@@ -127,6 +127,7 @@ export class MembersInquiry {
 	sort?: string;
 
 	@IsOptional()
+	@Type(() => Number)
 	direction?: Direction;
 
 	@IsOptional() 

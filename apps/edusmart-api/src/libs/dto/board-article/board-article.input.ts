@@ -52,6 +52,7 @@ export class BoardArticlesInquiry {
 	sort?: string;
 
 	@IsOptional()
+	@Type(() => Number)
 	direction?: Direction;
 
 	@IsOptional()
@@ -83,6 +84,7 @@ export class AllBoardArticlesInquiry {
 	sort?: string;
 
 	@IsOptional()
+	@Type(() => Number)
 	direction?: Direction;
 
 	@IsOptional()

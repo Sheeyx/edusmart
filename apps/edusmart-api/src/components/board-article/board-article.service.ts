@@ -14,6 +14,7 @@ import { LikeGroup } from '../../libs/enums/like.enum';
 import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.update';
 import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
 import { LikeInput } from '../../libs/dto/like/like.input';
+import { log } from 'console';
 @Injectable()
 export class BoardArticleService {
     constructor(
@@ -80,7 +81,10 @@ export class BoardArticleService {
 	public async getBoardArticles(memberId: ObjectId, input: BoardArticlesInquiry): Promise<BoardArticles> {
 		const { articleCategory, text } = input.search || {};
 		const match: T = { articleStatus: BoardArticleStatus.ACTIVE };
-		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+		const sortDirection: Direction = 
+			input.direction === Direction.ASC || input.direction === Direction.DESC ? input.direction : Direction.DESC;
+		
+		const sort: T = { [input?.sort ?? 'createdAt']: sortDirection };
 
 		if (articleCategory) match.articleCategory = articleCategory;
 		if (text) match.articleTitle = { $regex: new RegExp(text, 'i') };
@@ -88,6 +92,8 @@ export class BoardArticleService {
 			match.memberId = shapeIntoMongoObjectId(input.search.memberId);
 		}
 		console.log('match', match);
+		console.log('sort', sort);
+		
 
 		const result = await this.boardArticleModel
 			.aggregate([
