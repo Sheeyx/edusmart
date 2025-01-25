@@ -2,9 +2,9 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const AuthMember = createParamDecorator((data: string, context: ExecutionContext) => {
     let request: any;
-        request = context.switchToHttp().getRequest();
+        request = context.switchToHttp().getRequest();  
     if (!request) {
-        console.error('Request object is not found');
+        console.error('Request object is not found'); 
         return null;
     }
 
@@ -12,7 +12,8 @@ export const AuthMember = createParamDecorator((data: string, context: Execution
     const authorization = request.headers?.authorization;
 
     // `authMember` obyektini olish
-    const member = request.user;
+    const member = request.authMember;
+    console.log('Member:', member);
 
     // Agar `authMember` mavjud bo'lsa, unga `authorization`ni qo'shing
     if (member && authorization) {

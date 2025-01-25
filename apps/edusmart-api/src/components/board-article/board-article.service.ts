@@ -8,7 +8,7 @@ import { LikeService } from '../like/like.service';
 import { AllBoardArticlesInquiry, BoardArticleInput, BoardArticlesInquiry } from '../../libs/dto/board-article/board-article.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { StatisticModifier, T } from '../../libs/types/common';
-import { BoardArticleStatus } from '../../libs/enums/board-article.enum';
+import { BoardArticleCategory, BoardArticleStatus } from '../../libs/enums/board-article.enum';
 import { ViewGroup } from '../../libs/enums/view.enum';
 import { LikeGroup } from '../../libs/enums/like.enum';
 import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.update';
@@ -85,7 +85,6 @@ export class BoardArticleService {
 			input.direction === Direction.ASC || input.direction === Direction.DESC ? input.direction : Direction.DESC;
 		
 		const sort: T = { [input?.sort ?? 'createdAt']: sortDirection };
-
 		if (articleCategory) match.articleCategory = articleCategory;
 		if (text) match.articleTitle = { $regex: new RegExp(text, 'i') };
 		if (input.search?.memberId) {
