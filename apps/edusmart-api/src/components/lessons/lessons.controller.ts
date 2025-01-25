@@ -61,7 +61,7 @@ export class LessonsController {
 
 	@UseGuards(AuthGuard)
 	@Post('likeTargetLesson')
-	public async likeTargetBoardArticle(
+	public async likeTargetLesson(
 		@Body('lessonId') input: string,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Lessons> {
