@@ -15,7 +15,7 @@ export const LessonsSchema = new Schema(
 			default: LessonStatus.ACTIVE,
         },
 
-        lessonTittle: {
+        lessonTitle: {
             type: String,
             required: true,
         },

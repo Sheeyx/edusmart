@@ -11,6 +11,7 @@ import { shapeIntoMongoObjectId } from '../../libs/config';
 import { LessonsUpdate } from '../../libs/dto/lessons/lessons-update';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { getVideoUploader } from '../../libs/utils/video.uploader';
+import { getMulterUploader } from '../../libs/utils/uploader';
 
 
 @Controller('lessons')
@@ -20,18 +21,27 @@ export class LessonsController {
     
     @UseGuards(AuthGuard)
 	@Post('create')
-	@UseInterceptors(FileInterceptor('lessonVideo', getVideoUploader('lesson')))
-	public async createLesson(
-		@Body() input: LessonsInput,
+	@UseInterceptors(FileInterceptor('lessonVideo', getMulterUploader('lesson')))
+	public async createLesson( 
+		@Body() body: LessonsInput,
 		@AuthMember('_id') memberId: ObjectId,
 		@UploadedFile() file: Express.Multer.File,
 	): Promise<Lessons> {
+
+		const {lessonTitle, lessonDesc, lessonCategory} = body;
 		const uploadPath = `./uploads/lesson/`; // Path ni dinamik tarzda kiritish
 		if (file) {
-			input.lessonVideo = `${uploadPath}/${file.filename}`;
+			body.lessonVideo = `${uploadPath}/${file.filename}`;
 		  }
-		console.log('POST: createlessons', input);
-		return this.lessonService.createLessons(memberId, input);
+
+		  const parsedInput = {
+			lessonTitle,
+			lessonDesc,
+			lessonCategory,
+			lessonVideo: body.lessonVideo,
+		  };
+		console.log('POST: createlessons', body);
+		return this.lessonService.createLessons(memberId, parsedInput);
 	}
 
 	

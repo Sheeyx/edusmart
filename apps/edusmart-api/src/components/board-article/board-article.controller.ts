@@ -35,7 +35,7 @@ export class BoardArticleController {
 	constructor(private readonly boardArticleService: BoardArticleService) {}
 
 	@UseGuards(AuthGuard)
-	@Post('createBoardArticle')
+	@Post('createBoardArticle') 
 	@UseInterceptors(FileInterceptor('articleImage', getMulterUploader('article')))
 	public async createBoardArticle(
 		@AuthMember('_id') memberId: ObjectId,
@@ -58,7 +58,7 @@ export class BoardArticleController {
 			articleTitle,
 			articleContent,
 			articleCategory,
-			articleImage: body.articleImage,
+			articleImage: body.articleImage, 
 		  };
 
         console.log('Parsed input:', parsedInput);	

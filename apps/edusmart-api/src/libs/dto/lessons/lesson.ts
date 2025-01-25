@@ -7,7 +7,7 @@ export class Lessons {
 	_id: ObjectId;
 	lessonCategory: LessonCategory;
 	lessonStatus: LessonStatus;
-	lessonTittle: string;
+	lessonTitle: string;
 	lessonDesc: string;
 	lessonViews: number;
 	lessonLikes: number;

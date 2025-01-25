@@ -8,7 +8,7 @@ export class LessonsInput {
 
 	@IsNotEmpty()
 	@Length(3, 50)
-    lessonTittle: string;
+    lessonTitle: string;
 
 	@IsNotEmpty()
 	@Length(3, 50)
