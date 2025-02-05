@@ -30,9 +30,10 @@ export class AuthController {
   
      
       const member = await this.authService.googleLogin(user);
+
   
       // Token yoki boshqa foydalanuvchi ma'lumotlarini frontendga yuborish
-      const redirectUrl = `http://localhost:5173/home?accessToken=${member.accessToken}`;
+      const redirectUrl = `http://localhost:5173/google-callback?accessToken=${member.accessToken}`;
       return res.redirect(redirectUrl);
     } catch (error) {
       console.error('Google login error:', error);

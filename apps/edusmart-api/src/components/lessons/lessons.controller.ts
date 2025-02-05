@@ -2,9 +2,9 @@ import { Body, Controller, Get, Post, Query, UploadedFile, UseGuards, UseInterce
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { AuthMember } from '../auth/decorators/auth.member.decorator';
 import { ObjectId } from 'mongoose';
-import { LessonsInput } from '../../libs/dto/lessons/lessons.input';
+import { AllLessons, LessonInquiry, LessonsInput, OrdinaryInquiry } from '../../libs/dto/lessons/lessons.input';
 import { LessonsService } from './lessons.service';
-import { Lessons } from '../../libs/dto/lessons/lesson';
+import { Lesson, Lessons } from '../../libs/dto/lessons/lesson';
 import { WithoutGuard } from '../auth/guards/without.guard';
 import { BoardArticle } from '../../libs/dto/board-article/board-article';
 import { shapeIntoMongoObjectId } from '../../libs/config';
@@ -26,9 +26,9 @@ export class LessonsController {
 		@Body() body: LessonsInput,
 		@AuthMember('_id') memberId: ObjectId,
 		@UploadedFile() file: Express.Multer.File,
-	): Promise<Lessons> {
+	): Promise<Lesson> {
 
-		const {lessonTitle, lessonDesc, lessonCategory} = body;
+		const {lessonTitle, lessonDesc, lessonCategory, lessonLevel} = body;
 		const uploadPath = `./uploads/lesson/`; // Path ni dinamik tarzda kiritish
 		if (file) {
 			body.lessonVideo = `${uploadPath}/${file.filename}`;
@@ -38,6 +38,7 @@ export class LessonsController {
 			lessonTitle,
 			lessonDesc,
 			lessonCategory,
+			lessonLevel,
 			lessonVideo: body.lessonVideo,
 		  };
 		console.log('POST: createlessons', body);
@@ -47,36 +48,64 @@ export class LessonsController {
 	
 
     @UseGuards(WithoutGuard)
-    @Get('get')
-	public async getLessons(
+    @Get('getLesson')
+	public async getLesson(
 		@Query() input: string,
 		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Lessons> {
-		console.log('GET: getLessons');
+	): Promise<Lesson> {
+		console.log('GET: getLesson');
 		const lessonId = shapeIntoMongoObjectId(input);
-		return await this.lessonService.getLessons(memberId, lessonId);
+		return await this.lessonService.getLesson(memberId, lessonId);
 	}
 
 	@UseGuards(AuthGuard)
-    @Post("update")
+    @Post("updateLesson")
 	public async updateLesson(
 		@Body('input') input: LessonsUpdate,
 		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Lessons> {
+	): Promise<Lesson> {
         console.log('memberId', memberId)
 		console.log('POST: updateLesson');
 		input._id = shapeIntoMongoObjectId(input._id);
 		return await this.lessonService.updateLesson(memberId, input);
 	}
 
-	@UseGuards(AuthGuard)
-	@Post('likeTargetLesson')
-	public async likeTargetBoardArticle(
-		@Body('lessonId') input: string,
+	@UseGuards(WithoutGuard)
+	@Get('getLessons')
+	public async getLessons(
+		@Query() input: LessonInquiry,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Lessons> {
+		console.log('GET: getLessons');
+		return await this.lessonService.getLessons(memberId, input);
+	}
+
+	@UseGuards(WithoutGuard)
+    @Get('getAllLessons')
+    public async getAllLessons(
+    ): Promise<Lesson[]> {
+		console.log('GET: getAllLessons');
+		return await this.lessonService.getAllLessons();
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('likeTargetLesson')
+	public async likeTargetLessons(
+		@Body('lessonId') input: string,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Lesson> {
 		console.log('POST: likeTargetLessons');
 		const likeRefId = shapeIntoMongoObjectId(input);
 		return await this.lessonService.likeTargetLessons(memberId, likeRefId);
+	}
+
+	@UseGuards(AuthGuard)
+	@Get('getFavoriteLessons')
+	public async getFavoriteLessons(
+		@Query() input: OrdinaryInquiry,
+        @AuthMember('_id') memberId: ObjectId,
+    ): Promise<Lessons> {
+		console.log('GET: getFavoriteLessons');
+		return await this.lessonService.getFavoriteLessons(memberId, input);
 	}
 }

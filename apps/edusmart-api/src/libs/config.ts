@@ -3,6 +3,7 @@ import { T } from './types/common';
 export const availableAgentSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberExperience'];
 export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberExperience'];
 export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'memberLikes'];
+export const availableLessonSorts = ['createdAt', 'updatedAt', 'lessonLikes', 'lessonViews'];
 export const availableCommentSorts = ['createdAt', 'updatedAt'];
 
 export const shapeIntoMongoObjectId = (target: any) => {
@@ -46,3 +47,12 @@ export const lookupMember = {
 		as: 'memberData',
 	},
 };
+
+export const lookupFavourite = {
+	$lookup: {
+        from: 'members',
+        localField: 'favoriteLesson.memberId',
+        foreignField: '_id',
+        as: 'favoriteLesson.memberData',
+    },
+}

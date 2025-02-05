@@ -75,13 +75,19 @@ export class BoardArticleController {
 
 	@UseGuards(AuthGuard)
 	@Post('updateBoardArticle')
+	@UseInterceptors(FileInterceptor('articleImage', getMulterUploader('article')))
 	public async updateBoardArticle(
-		@Body('input') input: BoardArticleUpdate,
+		@Body() input: BoardArticleUpdate,
 		@AuthMember('_id') memberId: ObjectId,
+		@UploadedFile() file: Express.Multer.File,
 	): Promise<BoardArticle> {
 		console.log('memberId', memberId);
 		console.log('POST: updateBoardArticle');
 		input._id = shapeIntoMongoObjectId(input._id);
+		const uploadPath = `./uploads/article`; // Path ni dinamik tarzda kiritish
+		if (file) {
+			input.articleImage = `${uploadPath}/${file.filename}`;
+		}
 		return await this.boardArticleService.updateBoardArticle(memberId, input);
 	}
 

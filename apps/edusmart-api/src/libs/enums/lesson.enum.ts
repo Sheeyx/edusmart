@@ -1,12 +1,18 @@
 export enum LessonCategory {
-	BEGINNER = 'BEGINNER',
-	ELEMENTRY = 'ELEMENTRY',
-	INTERMEDIATE = 'INTERMEDIATE',
-	ADVANCED = 'ADVANCED',
+	ENGLISH = 'ENGLISH',
+    KOREAN = 'KOREAN',
+    RUSSIAN = 'RUSSIAN',
 }
 
 export enum LessonStatus {
 	ACTIVE = 'ACTIVE',
 	DELETE = 'DELETE',
     PENDING = 'PENDING',
+}
+
+export enum LessonLevel {
+	BEGINNER = 'BEGINNER',
+	ELEMENTRY = 'ELEMENTRY',
+	INTERMEDIATE = 'INTERMEDIATE',
+	ADVANCED = 'ADVANCED',
 }

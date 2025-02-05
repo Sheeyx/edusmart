@@ -38,8 +38,7 @@ export class MemberController {
 		@Body() input: MemberUpdate,
 		@UploadedFile() file: Express.Multer.File,
 	): Promise<Member> {
-		console.log('Authenticated member ID:', memberId); // This is the member ID attached to request.user by AuthGuard
-		console.log('Input data:', input);
+		console.log('POST: updateMember');
 		
 		delete input._id;
 		if (!memberId) {

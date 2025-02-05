@@ -17,7 +17,6 @@ export class BoardArticleUpdate {
 	articleTitle?: string;
 
 	@IsOptional()
-	@Length(3, 250)
 	articleContent?: string;
 
 	@IsOptional()

@@ -1,11 +1,17 @@
 import { Schema } from "mongoose";
-import { LessonCategory, LessonStatus } from "../libs/enums/lesson.enum";
+import { LessonCategory, LessonLevel, LessonStatus } from "../libs/enums/lesson.enum";
 
 export const LessonsSchema = new Schema(
 	{
 		lessonCategory: {
 			type: String,
 			enum: LessonCategory,
+			required: true,
+		},
+
+		lessonLevel: {
+			type: String,
+			enum: LessonLevel,
 			required: true,
 		},
 

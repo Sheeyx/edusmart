@@ -14,7 +14,6 @@ export class BoardArticleInput {
 	articleTitle: string;
 
 	@IsNotEmpty()
-	@Length(3, 250)
 	articleContent: string;
 
 	@IsOptional()
@@ -44,7 +43,6 @@ export class BoardArticlesInquiry {
 	@IsNotEmpty()
 	@Type(() => Number)	
 	@Min(1)
-	
 	limit: number;
 
 	@IsOptional()
@@ -56,7 +54,7 @@ export class BoardArticlesInquiry {
 	direction?: Direction;
 
 	@IsOptional()
-	search: BAISearch;
+	search?: BAISearch;
 }
 
 class ABAISearch {
