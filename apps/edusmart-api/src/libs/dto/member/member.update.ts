@@ -18,13 +18,6 @@ export class MemberUpdate {
 	memberNick?: string;
 
 	@IsOptional()
-	@Matches(passwordRegEx, {
-		message:
-			'Password must be 8-20 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.',
-	})
-	memberPassword?: string;
-
-	@IsOptional()
 	@IsString()
 	memberFullName?: string;
 

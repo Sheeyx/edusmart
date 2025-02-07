@@ -12,59 +12,54 @@ import { LessonsUpdate } from '../../libs/dto/lessons/lessons-update';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { getVideoUploader } from '../../libs/utils/video.uploader';
 import { getMulterUploader } from '../../libs/utils/uploader';
-
+import { MemberType } from '../../libs/enums/member.enum';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @Controller('lessons')
 export class LessonsController {
-    constructor(private readonly lessonService: LessonsService) {}
+	constructor(private readonly lessonService: LessonsService) {}
 
-    
-    @UseGuards(AuthGuard)
+	@UseGuards(AuthGuard)
 	@Post('create')
 	@UseInterceptors(FileInterceptor('lessonVideo', getMulterUploader('lesson')))
-	public async createLesson( 
+	public async createLesson(
 		@Body() body: LessonsInput,
 		@AuthMember('_id') memberId: ObjectId,
 		@UploadedFile() file: Express.Multer.File,
 	): Promise<Lesson> {
-
-		const {lessonTitle, lessonDesc, lessonCategory, lessonLevel} = body;
+		const { lessonTitle, lessonDesc, lessonCategory, lessonLevel } = body;
 		const uploadPath = `./uploads/lesson/`; // Path ni dinamik tarzda kiritish
 		if (file) {
 			body.lessonVideo = `${uploadPath}/${file.filename}`;
-		  }
+		}
 
-		  const parsedInput = {
+		const parsedInput = {
 			lessonTitle,
 			lessonDesc,
 			lessonCategory,
 			lessonLevel,
 			lessonVideo: body.lessonVideo,
-		  };
+		};
 		console.log('POST: createlessons', body);
 		return this.lessonService.createLessons(memberId, parsedInput);
 	}
 
-	
-
-    @UseGuards(WithoutGuard)
-    @Get('getLesson')
-	public async getLesson(
-		@Query() input: string,
-		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Lesson> {
+	@UseGuards(WithoutGuard)
+	@Get('getLesson')
+	public async getLesson(@Query() input: string, @AuthMember('_id') memberId: ObjectId): Promise<Lesson> {
 		console.log('GET: getLesson');
 		const lessonId = shapeIntoMongoObjectId(input);
 		return await this.lessonService.getLesson(memberId, lessonId);
 	}
 
 	@UseGuards(AuthGuard)
-    @Post("updateLesson")
+	@Post('updateLesson')
 	public async updateLesson(
 		@Body('input') input: LessonsUpdate,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Lesson> {
-        console.log('memberId', memberId)
+		console.log('memberId', memberId);
 		console.log('POST: updateLesson');
 		input._id = shapeIntoMongoObjectId(input._id);
 		return await this.lessonService.updateLesson(memberId, input);
@@ -72,20 +67,34 @@ export class LessonsController {
 
 	@UseGuards(WithoutGuard)
 	@Get('getLessons')
-	public async getLessons(
-		@Query() input: LessonInquiry,
-		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Lessons> {
+	public async getLessons(@Query() input: LessonInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Lessons> {
 		console.log('GET: getLessons');
 		return await this.lessonService.getLessons(memberId, input);
 	}
 
 	@UseGuards(WithoutGuard)
-    @Get('getAllLessons')
-    public async getAllLessons(
-    ): Promise<Lesson[]> {
+	@Get('getAllLessons')
+	public async getAllLessons(): Promise<Lesson[]> {
 		console.log('GET: getAllLessons');
 		return await this.lessonService.getAllLessons();
+	}
+
+	// ADMIN
+	@Roles(MemberType.ADMIN)
+	@UseGuards(RolesGuard)
+	@Get('getAllLessonsByAdmin')
+	public async getAllLessonsByAdmin(@Query() input: LessonInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Lessons> {
+		console.log('GET: getAllLessonsByAdmin');
+		return await this.lessonService.getAllLessonsByAdmin(memberId, input);
+	}
+
+	@Roles(MemberType.ADMIN)
+	@Post('updateLessonByAdmin')
+	public async updateLessonByAdmin(
+		@Body() input: any,
+	): Promise<Lesson> {
+		console.log('POST: updateLessonByAdmin');
+		return await this.lessonService.updateLessonByAdmin(input);
 	}
 
 	@UseGuards(AuthGuard)
@@ -103,8 +112,8 @@ export class LessonsController {
 	@Get('getFavoriteLessons')
 	public async getFavoriteLessons(
 		@Query() input: OrdinaryInquiry,
-        @AuthMember('_id') memberId: ObjectId,
-    ): Promise<Lessons> {
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Lessons> {
 		console.log('GET: getFavoriteLessons');
 		return await this.lessonService.getFavoriteLessons(memberId, input);
 	}

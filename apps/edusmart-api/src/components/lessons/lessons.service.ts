@@ -72,27 +72,29 @@ export class LessonsService {
 		const sortDirection: Direction =
 			input.direction === Direction.ASC || input.direction === Direction.DESC ? input.direction : Direction.DESC;
 
-	    const sort: T = {[input?.sort ?? 'createdAt']: sortDirection};
+		const sort: T = { [input?.sort ?? 'createdAt']: sortDirection };
 
 		if (text) match.lessonTitle = { $regex: new RegExp(text, 'i') };
 		if (lessonLevel) match.lessonLevel = lessonLevel;
 
-		const result = await this.lessonsModel.aggregate([
-			{$match: match},
-			{$sort: sort},
-			{$facet: {
-				list: [
-					{$skip: (input.page - 1) * input.limit},
-					{$limit: input.limit},
-					lookupAuthMemberLiked(memberId, LikeGroup.LESSON),
-					lookupMember,
-					{$unwind: '$memberData'},
-				],
-				metaCounter: [
-					{$count: 'total'},
-				],
-			}}
-		]).exec();
+		const result = await this.lessonsModel
+			.aggregate([
+				{ $match: match },
+				{ $sort: sort },
+				{
+					$facet: {
+						list: [
+							{ $skip: (input.page - 1) * input.limit },
+							{ $limit: input.limit },
+							lookupAuthMemberLiked(memberId, LikeGroup.LESSON),
+							lookupMember,
+							{ $unwind: '$memberData' },
+						],
+						metaCounter: [{ $count: 'total' }],
+					},
+				},
+			])
+			.exec();
 
 		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		return result[0];
@@ -101,10 +103,9 @@ export class LessonsService {
 	public async getAllLessons(): Promise<Lesson[]> {
 		try {
 			return this.lessonsModel.find({ lessonStatus: LessonStatus.ACTIVE }).exec();
-		
 		} catch (err) {
 			console.log('Error, Service.model:', err.message);
-            throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+			throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		}
 	}
 
@@ -128,6 +129,48 @@ export class LessonsService {
 		return result;
 	}
 
+	// ADMIN
+	public async getAllLessonsByAdmin(memberId: ObjectId, input: LessonInquiry): Promise<Lessons> {
+		const { text, lessonLevel } = input.search || {};
+		const match: T = {};
+		const sortDirection: Direction =
+			input.direction === Direction.ASC || input.direction === Direction.DESC ? input.direction : Direction.DESC;
+
+		const sort: T = { [input?.sort ?? 'createdAt']: sortDirection };
+
+		if (text) match.lessonTitle = { $regex: new RegExp(text, 'i') };
+		if (lessonLevel) match.lessonLevel = lessonLevel;
+
+		const result = await this.lessonsModel
+			.aggregate([
+				{ $match: match },
+				{ $sort: sort },
+				{
+					$facet: {
+						list: [
+							{ $skip: (input.page - 1) * input.limit },
+							{ $limit: input.limit },
+							lookupAuthMemberLiked(memberId, LikeGroup.LESSON),
+							lookupMember,
+							{ $unwind: '$memberData' },
+						],
+						metaCounter: [{ $count: 'total' }],
+					},
+				},
+			])
+			.exec();
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		return result[0];
+	}
+
+	public async updateLessonByAdmin(input: any): Promise<Lesson> {
+		const { _id } = input;
+		const result = await this.lessonsModel.findOneAndUpdate({ _id: _id }, input, { new: true }).exec();
+		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+		return result;
+
+	}
+
 	public async likeTargetLessons(memberId: ObjectId, likeRefId: ObjectId): Promise<Lesson> {
 		const target: Lesson = await this.lessonsModel
 			.findOne({ _id: likeRefId, lessonStatus: LessonStatus.ACTIVE })
@@ -146,7 +189,7 @@ export class LessonsService {
 	}
 
 	public async getFavoriteLessons(memeberId: ObjectId, input: OrdinaryInquiry): Promise<Lessons> {
-		return await this.likeService.getFavoriteLessons(memeberId, input);	
+		return await this.likeService.getFavoriteLessons(memeberId, input);
 	}
 
 	public async lessonsStatsEditor(input: StatisticModifier): Promise<Lesson> {

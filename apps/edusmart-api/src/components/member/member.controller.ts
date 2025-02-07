@@ -92,7 +92,7 @@ export class MemberController {
 	//Authorization : ADMIN
 	@Roles(MemberType.ADMIN)
 	@Post('updateMembersAdmin')
-	public async updateMemberByAdmin(@Body('input') input: MemberUpdate): Promise<Member> {
+	public async updateMemberByAdmin(@Body() input: any): Promise<Member> {
 		console.log('POST: updateMemberByAdmin');
 		return await this.memberService.updateMemberByAdmin(input);
 	}
