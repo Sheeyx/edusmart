@@ -8,6 +8,7 @@ export enum Message {
 	BAD_REQUEST = 'Bad request!',
 
 	USED_MEMBER_NICK_OR_PHONE = "Already used member nick or phone",
+	USED_ADMIN = "Already have admin",
 	NO_MEMBER_NICK = 'No member with that member nick!',
 	BLOCKED_USER = 'You have been blocked',
 	WRONG_PASSWORD = 'Password you entered is wrong, please try again!',

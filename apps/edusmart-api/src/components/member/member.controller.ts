@@ -54,11 +54,11 @@ export class MemberController {
 
 	@UseGuards(AuthGuard)
 	@Get('checkAuth')
-	public async checkAuth(@AuthMember('memberNick') memberNick: string): Promise<string> {
+	public async checkAuth(@AuthMember('_id') authMember: Member): Promise<Member> {
 		console.log('GET: checkAuth');
-		console.log('memberNick', memberNick);
-
-		return `Hi ${memberNick}`;
+		console.log('memberNick', authMember);
+        
+		return await this.memberService.getCurrentMember(authMember._id);
 	}
 	@Roles(MemberType.STUDENT, MemberType.TEACHER)
 	@UseGuards(RolesGuard)
@@ -70,7 +70,7 @@ export class MemberController {
 	@UseGuards(WithoutGuard)
 	@Get('getMember')
 	public async getMember(@Query() input: string, @AuthMember('_id') memberId: ObjectId): Promise<Member> {
-		console.log('GET: getMember');
+		console.log('GET: getMember'); 
 		const targetId = shapeIntoMongoObjectId(input);
 		return await this.memberService.getMember(memberId, targetId);
 	}

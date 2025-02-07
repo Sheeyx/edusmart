@@ -42,16 +42,18 @@ export class AuthService {
 	}
 
 	public async googleLogin(user: MemberInput): Promise<Member> {
-		const { memberEmail, memberFullName, memberImage, memberType } = user;
+		const { memberEmail, memberNick, memberFullName, memberImage, memberType, memberPassword } = user;
 
 		// Foydalanuvchini email orqali tekshirish
-		let existingMember = await this.memberModel.findOne({ memberEmail }).exec();
+		let existingMember = await this.memberModel.findOne({ memberNick }).exec();
 
 		if (!existingMember) {
 			// Yangi foydalanuvchini yaratish
 			existingMember = await this.memberModel.create({
+				memberNick,
 				memberEmail,
 				memberFullName,
+				memberPassword,
 				memberImage,
 				memberAuthType: MemberAuthType.EMAIL,
 				memberStatus: MemberStatus.ACTIVE,

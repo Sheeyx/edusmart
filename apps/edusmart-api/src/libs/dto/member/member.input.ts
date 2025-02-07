@@ -54,7 +54,11 @@ export class MemberInput {
   memberLocation?: string;
 
   @IsOptional()
-  memberLinks?: string;
+  memberLinks?: {
+	    telegram?: string,
+        instagram?: string,
+        youtube?: string
+  };
 
 }
 

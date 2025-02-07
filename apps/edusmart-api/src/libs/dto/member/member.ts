@@ -11,13 +11,17 @@ export class Member {
 	memberNick: string;
 	memberPassword?: string;
 	memberFullName?: string;
-	memberEmail:string;
+	memberEmail: string;
 	memberImage: string;
 	memberAddress?: string;
 	memberDesc?: string;
 	memberExperience?: string;
 	memberLocation?: string;
-	memberLinks?: string;
+	memberLinks?: {
+		telegram?: string;
+		instagram?: string;
+		youtube?: string;
+	};
 	memberLessons?: string;
 	memberArticles?: string;
 	deletedAt: Date;

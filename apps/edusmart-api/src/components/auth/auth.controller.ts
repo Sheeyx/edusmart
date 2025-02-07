@@ -20,7 +20,6 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res): Promise<void> {
     try {
-      console.log('req', req);
       console.log('user', req.user);
   
       const user: MemberInput = {
@@ -30,7 +29,6 @@ export class AuthController {
   
      
       const member = await this.authService.googleLogin(user);
-
   
       // Token yoki boshqa foydalanuvchi ma'lumotlarini frontendga yuborish
       const redirectUrl = `http://localhost:5173/google-callback?accessToken=${member.accessToken}`;

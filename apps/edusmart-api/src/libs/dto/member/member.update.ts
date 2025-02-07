@@ -58,7 +58,11 @@ export class MemberUpdate {
 
 	@IsOptional()
 	@IsString()
-	memberLinks?: string;
+	memberLinks?: {
+		telegram?: string,
+        instagram?: string,
+        youtube?: string
+	};
 
 	@IsOptional()
 	@IsString()

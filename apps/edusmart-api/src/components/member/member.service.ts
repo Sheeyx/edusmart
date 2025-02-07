@@ -30,6 +30,12 @@ export class MemberService {
 		// TODO: Hash password
 		input.memberPassword = await this.authService.hashPassword(input.memberPassword);
 		try {
+			if (input.memberType === MemberType.ADMIN) {
+				const admin = await this.memberModel.findOne({ memberType: input.memberType }).exec();
+				if (admin) {
+					throw new BadRequestException(Message.USED_ADMIN);
+				}
+			}
 			const result = await this.memberModel.create(input);
 			const memberWithToken = result.toObject();
 			// `accessToken`ni yaratish
@@ -71,7 +77,17 @@ export class MemberService {
 	public async updateMember(memberId: ObjectId, input: MemberUpdate): Promise<Member> {
 		console.log('input:', input);
 		console.log('Received member ID in service:', memberId);
+		
+		if (input.memberLinks && typeof input.memberLinks === 'string') {
+			try {
+				input.memberLinks = JSON.parse(input.memberLinks);
+			} catch (error) {
+				console.error('Failed to parse memberLinks:', error);
+				throw new InternalServerErrorException('Failed to parse memberLinks');
+			}
+		}
 		console.log('Input data for update:', input);
+
 		const result: Member = await this.memberModel
 			.findOneAndUpdate(
 				{
@@ -85,6 +101,17 @@ export class MemberService {
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
 		result.accessToken = await this.authService.createToken(result);
+		return result;
+	}
+
+	public async getCurrentMember(memberId: ObjectId): Promise<Member> {
+		const result = await this.memberModel
+			.findOne({
+				_id: memberId,
+				memberStatus: MemberStatus.ACTIVE,
+			})
+			.exec();
+		if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		return result;
 	}
 
@@ -106,7 +133,7 @@ export class MemberService {
 		const match: T = { memberType: MemberType.TEACHER, memberStatus: MemberStatus.ACTIVE };
 
 		// `Direction` enumdan foydalanish va fallback qiymat
-		const sortDirection: Direction = 
+		const sortDirection: Direction =
 			input.direction === Direction.ASC || input.direction === Direction.DESC ? input.direction : Direction.DESC;
 
 		const sort: T = { [input?.sort ?? 'createdAt']: sortDirection };

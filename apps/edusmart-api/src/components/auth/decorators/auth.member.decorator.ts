@@ -1,4 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { Member } from 'apps/edusmart-api/src/libs/dto/member/member';
 
 export const AuthMember = createParamDecorator((data: string, context: ExecutionContext) => {
     let request: any;
