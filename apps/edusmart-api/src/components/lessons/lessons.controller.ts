@@ -100,6 +100,7 @@ export class LessonsController {
 	@UseGuards(AuthGuard)
 	@Post('likeTargetLesson')
 	public async likeTargetLessons(
+
 		@Body('lessonId') input: string,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Lesson> {

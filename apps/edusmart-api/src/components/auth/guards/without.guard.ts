@@ -21,6 +21,7 @@ export class WithoutGuard implements CanActivate {
 
         // Tokenni tekshirish va foydalanuvchini olish
         const authMember = await this.authService.verifyToken(token);
+        request.user = authMember; // Attach to user for consistency
 
         // Foydalanuvchi ma'lumotlarini `request.body`ga qo'shish
         request.authMember = authMember;
