@@ -28,7 +28,9 @@ build:
 test:
   stage: test
   script:
-    - npm run test
+    - echo "Running Tests..."
+    - npm install
+    - npm run test -- --runInBand --detectOpenHandles --forceExit
 
 # Deploy (adjust this to your needs)
 deploy:
