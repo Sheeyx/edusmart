@@ -1,27 +1,39 @@
+image: node:18
+
 stages:
+  - install
   - build
   - test
   - deploy
 
-# Example build job
+# Install dependencies
+install:
+  stage: install
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+
+# Build the NestJS app
 build:
   stage: build
   script:
-    - echo "Building the project..."
-    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
 
-# Example test job
+# Run tests
 test:
   stage: test
   script:
-    - echo "Running tests..."
-    - npm test
+    - npm run test
 
-# Example deploy job
+# Deploy (adjust this to your needs)
 deploy:
   stage: deploy
   script:
-    - echo "Deploying project..."
-    - npm run deploy
+    - echo "Deploying the app..."
   only:
     - master
