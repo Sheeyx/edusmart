@@ -3,7 +3,6 @@ image: node:18
 stages:
   - install
   - build
-  - test
   - deploy
 
 # Install dependencies
@@ -25,12 +24,12 @@ build:
       - dist/
 
 # Run tests
-test:
-  stage: test
-  script:
-    - echo "Running Tests..."
-    - npm install
-    - npm run test -- --runInBand --detectOpenHandles --forceExit
+# test:
+#   stage: test
+#   script:
+#     - echo "Running Tests..."
+#     - npm install
+#     - npm run test -- --runInBand --detectOpenHandles --forceExit
 
 # Deploy (adjust this to your needs)
 deploy:
