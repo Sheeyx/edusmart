@@ -59,6 +59,9 @@ export class BoardArticlesInquiry {
 
 class ABAISearch {
 	@IsOptional()
+    text?: string;
+
+	@IsOptional()
 	articleStatus?: BoardArticleStatus;
 
 	@IsOptional()

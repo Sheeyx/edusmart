@@ -115,21 +115,21 @@ export class BoardArticleController {
 	/** ADMIN **/
 
 	@Roles(MemberType.ADMIN)
-	@UseGuards(RolesGuard)
+	@UseGuards(RolesGuard) 
 	@Get('getAllBoardArticlesAdmin')
 	public async getAllBoardArticlesByAdmin(
 		@Query() input: AllBoardArticlesInquiry,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<BoardArticles> {
 		console.log('GET: getAllBoardArticlesByAdmin');
-		return await this.boardArticleService.getAllBoardArticlesByAdmin(input);
+		return await this.boardArticleService.getAllBoardArticlesByAdmin(memberId, input);
 	}
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Post('updateBoardArticleAdmin')
 	public async updateBoardArticleByAdmin(
-		@Body('input') input: BoardArticleUpdate,
+		@Body() input: any,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<BoardArticle> {
 		console.log('POST: updateBoardArticleByAdmin');
@@ -141,7 +141,7 @@ export class BoardArticleController {
 	@UseGuards(RolesGuard)
 	@Post('removeBoardArticleAdmin')
 	public async removeBoardArticleByAdmin(
-		@Body('articleId') input: string,
+		@Body() input: string,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<BoardArticle> {
 		console.log('POST: removeBoardArticleByAdmin');

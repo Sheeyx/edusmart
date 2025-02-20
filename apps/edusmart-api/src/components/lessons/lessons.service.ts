@@ -3,7 +3,7 @@ import { Lesson, Lessons } from '../../libs/dto/lessons/lesson';
 import { Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { MemberService } from '../member/member.service';
-import { AllLessons, LessonInquiry, LessonsInput, OrdinaryInquiry } from '../../libs/dto/lessons/lessons.input';
+import { AllLessons, AllLessonsAdminInquiry, LessonInquiry, LessonsInput, OrdinaryInquiry } from '../../libs/dto/lessons/lessons.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { StatisticModifier, T } from '../../libs/types/common';
 import { LessonStatus } from '../../libs/enums/lesson.enum';
@@ -130,8 +130,8 @@ export class LessonsService {
 	}
 
 	// ADMIN
-	public async getAllLessonsByAdmin(memberId: ObjectId, input: LessonInquiry): Promise<Lessons> {
-		const { text, lessonLevel } = input.search || {};
+	public async getAllLessonsByAdmin(memberId: ObjectId, input: AllLessonsAdminInquiry): Promise<Lessons> {
+		const { text, lessonLevel, lessonStatus } = input.search || {};
 		const match: T = {};
 		const sortDirection: Direction =
 			input.direction === Direction.ASC || input.direction === Direction.DESC ? input.direction : Direction.DESC;
@@ -140,6 +140,7 @@ export class LessonsService {
 
 		if (text) match.lessonTitle = { $regex: new RegExp(text, 'i') };
 		if (lessonLevel) match.lessonLevel = lessonLevel;
+		if (lessonStatus) match.lessonStatus = lessonStatus;
 
 		const result = await this.lessonsModel
 			.aggregate([

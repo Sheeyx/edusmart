@@ -74,6 +74,9 @@ class ALSISearch {
 	@IsOptional()
     lessonStatus?: LessonStatus;
 
+	@IsOptional()
+    lessonLevel?: LessonLevel;
+
     @IsOptional()
     lessonCategory?: LessonCategory;
 }

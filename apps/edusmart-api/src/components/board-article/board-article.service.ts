@@ -132,11 +132,16 @@ export class BoardArticleService {
 		return result;
 	}
 
-    public async getAllBoardArticlesByAdmin(input: AllBoardArticlesInquiry): Promise<BoardArticles> {
-		const { articleStatus, articleCategory } = input.search || {};
+	// ADMIN
+    public async getAllBoardArticlesByAdmin(memberId: ObjectId, input: AllBoardArticlesInquiry): Promise<BoardArticles> {
+		const { text, articleStatus, articleCategory } = input.search || {};
 		const match: T = {};
-		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+		const sortDirection: Direction =
+			input.direction === Direction.ASC || input.direction === Direction.DESC ? input.direction : Direction.DESC;
 
+		const sort: T = { [input?.sort ?? 'createdAt']: sortDirection };
+
+		if (text) match.articleTitle = { $regex: new RegExp(text, 'i') };
 		if (articleStatus) match.articleStatus = articleStatus;
 		if (articleCategory) match.articleCategory = articleCategory;
 
@@ -161,11 +166,11 @@ export class BoardArticleService {
 		return result[0];
 	}
 
-	public async updateBoardArticleByAdmin(input: BoardArticleUpdate): Promise<BoardArticle> {
+	public async updateBoardArticleByAdmin(input: any): Promise<BoardArticle> {
 		const {_id, articleStatus } = input;
         console.log('POST body:', input);
 
-		const result = await this.boardArticleModel.findOneAndUpdate({_id:_id, articleStatus:BoardArticleStatus.ACTIVE}, input, { new: true }).exec();
+		const result = await this.boardArticleModel.findOneAndUpdate({_id:_id}, input, { new: true }).exec();
         console.log('result', result)
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
         if (articleStatus === BoardArticleStatus.DELETE) {

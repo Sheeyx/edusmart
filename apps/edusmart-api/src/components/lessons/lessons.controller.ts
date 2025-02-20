@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query, UploadedFile, UseGuards, UseInterce
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { AuthMember } from '../auth/decorators/auth.member.decorator';
 import { ObjectId } from 'mongoose';
-import { AllLessons, LessonInquiry, LessonsInput, OrdinaryInquiry } from '../../libs/dto/lessons/lessons.input';
+import { AllLessons, AllLessonsAdminInquiry, LessonInquiry, LessonsInput, OrdinaryInquiry } from '../../libs/dto/lessons/lessons.input';
 import { LessonsService } from './lessons.service';
 import { Lesson, Lessons } from '../../libs/dto/lessons/lesson';
 import { WithoutGuard } from '../auth/guards/without.guard';
@@ -83,7 +83,7 @@ export class LessonsController {
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Get('getAllLessonsByAdmin')
-	public async getAllLessonsByAdmin(@Query() input: LessonInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Lessons> {
+	public async getAllLessonsByAdmin(@Query() input: AllLessonsAdminInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Lessons> {
 		console.log('GET: getAllLessonsByAdmin');
 		return await this.lessonService.getAllLessonsByAdmin(memberId, input);
 	}
