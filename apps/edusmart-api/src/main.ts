@@ -8,10 +8,10 @@ import * as express from 'express';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ transform: true}));
-	app.enableCors({ origin: true, credentials: true });
+	app.enableCors({ origin: "http://localhost:4006", credentials: true });
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.use('/uploads', express.static('./uploads'));
-  await app.listen(process.env.PORT_API ?? 3000);
+  await app.listen(process.env.PORT_API ?? 4007);
 }
 bootstrap();

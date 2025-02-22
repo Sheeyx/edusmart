@@ -10,8 +10,8 @@ import { Connection } from 'mongoose';
 			}),
 		}),
 	],
-	exports: [],
-})
+	exports: [MongooseModule]
+}) 
 export class DatabaseModule {
 	constructor(@InjectConnection() private connection: Connection) {
 		if (connection.readyState === 1) {
